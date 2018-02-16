@@ -7,7 +7,7 @@ from keras.models import load_model
 from pandas.io.parsers import read_csv
 from sklearn.utils import shuffle
 
-def load_data(test=False):
+def load_data(test=False, complete_points=True):
     """
     Loads data from FTEST if *test* is True, otherwise from FTRAIN.
     Important that the files are in a `data` directory
@@ -20,8 +20,9 @@ def load_data(test=False):
     # The Image column has pixel values separated by space; convert
     # the values to numpy arrays:
     df['Image'] = df['Image'].apply(lambda im: np.fromstring(im, sep=' '))
-
-    df = df.dropna()  # drop all rows that have missing values in them
+    
+    if complete_points:
+        df = df.dropna()  # drop all rows that have missing values in them
 
     X = np.vstack(df['Image'].values) / 255.  # scale pixel values to [0, 1]
     X = X.astype(np.float32)
